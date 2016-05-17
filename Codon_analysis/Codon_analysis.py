@@ -221,7 +221,7 @@ def import_codon_map(filename):
 
 def gene_codon_analysis(gene, organism, codon_map):
     """
-    Input: gene name and codon mapping
+    Input: gene name, organism, and codon mapping
     
     This function assumes the mRNA fasta files have already been downloaded
     
@@ -242,13 +242,22 @@ def gene_codon_analysis(gene, organism, codon_map):
     #Calculate sums, lengths and averages for given codon mapping
     codon_sums = []
     protein_lengths = []
+    codon_first_25 = []
+    codon_first_third = []
     
     for mapping in gene_codon_maps:
         codon_sums.append(sum(mapping))
         protein_lengths.append(len(mapping))
+        codon_first_25.append(sum(mapping[0:24]))
+        codon_first_third.append(sum(mapping[0:int(len(mapping)/3)]))
     
     codon_averages = [float(sums)/lengths
                       for sums,lengths in zip(codon_sums, protein_lengths)]
+    
+    codon_first_25_avgs = [float(sums)/25 for sums in codon_first_25]
+    
+    codon_first_third_avgs = [float(sums)/int(lengths / 3) for sums, lengths in 
+                        zip(codon_first_third, protein_lengths)]
     
     #Calculate normalized codon usage (i.e, relative to theoretical maximum)
     codon_sums_norm = []
@@ -268,11 +277,14 @@ def gene_codon_analysis(gene, organism, codon_map):
     output_norm = sum(codon_averages_norm)/len(codon_averages_norm)
     output_range_ratio = (protein_length_max - protein_length_min) / float(protein_length_max)
     output_protein_size_range = str(protein_length_min) + " - " + str(protein_length_max)
+    output_first_25 = sum(codon_first_25_avgs)/len(codon_first_25_avgs)
+    output_first_third = sum(codon_first_third_avgs)/(len(codon_first_third_avgs))
         
     output_dict = {"gene_name":gene, "avg":output_avg, "total":output_total,
                    "normalized":output_norm, "range_ratio":output_range_ratio,
                    "length_range":output_protein_size_range, 
-                   "median_protein_length":protein_length_median}
+                   "median_protein_length":protein_length_median, "first_25_avg":
+                       output_first_25, "first_third_avg": output_first_third}
     
     return output_dict
     
@@ -327,7 +339,8 @@ if __name__ == "__main__":
     
     with open(output_filename, 'wb') as csvfile:
         fieldnames = ['gene_name', 'avg', 'total', 'normalized', 'range_ratio',
-                      'length_range', 'median_protein_length']
+                      'length_range', 'median_protein_length', 'first_25_avg', 
+                      'first_third_avg']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames, restval="ERROR")
         writer.writeheader()
         
