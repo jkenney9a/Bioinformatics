@@ -8,7 +8,7 @@ This script uses Bipython to take in a list of gene names and a given codon map,
 * The median protein length of all protein lengths downloaded from NCBI for a given gene
 
 The mRNA sequences are downloaded from the NCBI nucleotide database using Biopython using the following search terms:
-  * *gene* + "[Gene Name] AND " + *organism* + "[Organism] AND mRNA[Filter] AND RefSeq[Filter] NOT PREDICTED"
+  * *gene* + "[Gene Name] AND " + *organism* + "[Organism] AND mRNA[Filter] AND RefSeq[Filter] NOT PREDICTED[Title]"
 
 ###Inputs:
 ######Items in bold are required every time the script is run. Other items are only required if FASTA files for genes of interest need to be downloaded.
