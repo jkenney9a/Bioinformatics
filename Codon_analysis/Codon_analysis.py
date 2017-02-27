@@ -97,7 +97,7 @@ def get_CDS_fasta_files(gene, organism):
         
          #Get gene id from Gene database; exclude predicted sequences        
         search_term = gene + "[Gene Name] AND " + organism + \
-        "[Organism] AND mRNA[Filter] AND RefSeq[Filter] NOT PREDICTED"
+        "[Organism] AND mRNA[Filter] AND RefSeq[Filter] NOT PREDICTED[Title]"
         
         search_handle = Entrez.esearch(db="nucleotide", term = search_term)
         
